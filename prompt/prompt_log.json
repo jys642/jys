@@ -58,6 +58,19 @@
         "更新 README.md 与 data/README.md：公开数据集用引用链接、自建数据集标注开源链接（占位待填）"
       ],
       "result": "数据来源调整为「公开数据集引用链接 + 自建数据集开源到 HF/ModelScope 后引用链接」，上传需用户账号执行，完成后回填实际链接"
+    },
+    {
+      "id": 5,
+      "date": "2026-08-30",
+      "stage": "阶段一：数据来源最终方案（小数据直接提交仓库）",
+      "role": "user",
+      "user_prompt": "把自建的小数据集直接上传",
+      "assistant_actions": [
+        "移除 .gitignore 中数据二进制文件的排除规则",
+        "将 data/raw（120 张）与 data/processed（480 张）直接提交到 GitHub 仓库",
+        "更新 README.md 与 data/README.md：自建小数据集改为「直接提交仓库」"
+      ],
+      "result": "自建小数据集按课设「数据量小直接提交到仓库 /data 目录」要求直接入库，公开数据集仍引用链接"
     }
   ]
 }

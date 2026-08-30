@@ -32,9 +32,9 @@
   - [Paracetamol Defect Dataset (Kaggle)](https://www.kaggle.com/datasets/arthurkray/paracetamol-defect-dataset) — 3500 张 / 5 类
   - [Pill Defect Dataset (Kaggle)](https://www.kaggle.com/datasets/pudpawat/pill-defect-dataset) — 363 张 / defect+normal
   - [Pill-Defects (GitHub)](https://github.com/PerceptiLabs/Pill-Defects) — defect/normal + data.csv
-- **自建数据集**（开源到 HuggingFace / ModelScope 后引用链接）：
-  - 用 `data/generate_dataset.py` 合成 120 张泡罩药板图像（6 类缺陷、YOLO 标注），开源到 HuggingFace：`https://huggingface.co/datasets/<你的用户名>/pharma-blister-defect-dataset`（待上传后填入实际链接）
-  - 上传脚本：`data/upload_to_hf.py`；本地副本保留在 `data/raw`、`data/processed` 供复现
+- **自建小数据集**（数据量小，直接提交到仓库 `/data` 目录）：
+  - 用 `data/generate_dataset.py` 合成 120 张泡罩药板图像（6 类缺陷、YOLO 标注），原始数据在 `data/raw`，预处理+增广结果在 `data/processed`
+  - 如需开源到 HuggingFace / ModelScope，可运行 `data/upload_to_hf.py` 上传后再引用平台链接
 
 > 完整的数据来源、类别定义与目录说明见 [data/README.md](data/README.md)。
 
