@@ -15,15 +15,14 @@
 
 > Kaggle 数据集需登录后下载；GitHub 镜像可直接克隆。公开数据集类别与本项目 6 类缺陷不完全一一对应，实际训练时可据此做类别映射或再标注。
 
-### 2. 自建数据集（开源到 HuggingFace / ModelScope，引用链接）
-因目标缺陷类别（缺粒、裂片、破损、飞边、污渍、漏装）需与《选题说明》严格一致，且公开泡罩数据集的类别/标注格式不统一，本项目用脚本 `generate_dataset.py` 合成自建泡罩药板缺陷数据集，并开源到 HuggingFace 平台，通过链接引用。
+### 2. 自建小数据集（直接提交到仓库 /data 目录）
+因目标缺陷类别（缺粒、裂片、破损、飞边、污渍、漏装）需与《选题说明》严格一致，且公开泡罩数据集的类别/标注格式不统一，本项目用脚本 `generate_dataset.py` 合成自建泡罩药板缺陷数据集。数据量小，按课设要求直接提交到仓库 `/data` 目录。
 
-- **HuggingFace 链接**：https://huggingface.co/datasets/<你的用户名>/pharma-blister-defect-dataset （待上传后填入实际链接）
-- **上传脚本**：`data/upload_to_hf.py`（登录 HF 后一键上传；ModelScope 魔搭同理，可参照脚本改用 `modelscope` 库）
-- **数据集卡片**：`data/hf_dataset_card.md`（上传时作为仓库 README）
-- **规模**：120 张图像（640×640，2×5 药窝布局），6 类缺陷，共 372 个标注，类别均衡。
+- **规模**：原始 120 张图像（640×640，2×5 药窝布局），6 类缺陷，共 372 个标注，类别均衡。
+- **预处理结果**：480 张（预处理 + 增广），见 `processed/`，划分索引见 `processed/index.json`。
 - **标注**：YOLO 格式（`class cx cy w h`，均归一化），类别见 `raw/classes.txt`。
-- **本地副本**：仓库内 `data/raw`、`data/processed` 保留数据副本，用于本地复现与流程验证（合成数据，非真实产线图像）。
+- **性质**：合成数据（脚本生成），非真实产线采集。
+- **可选开源**：如需开源到 HuggingFace / ModelScope，可运行 `data/upload_to_hf.py` 上传后再引用平台链接。
 
 ## 二、目录结构
 
