@@ -1,0 +1,63 @@
+{
+  "project": "药板药片外观缺陷智能检测系统",
+  "course": "制造智能技术课程设计",
+  "ai_tool": "Claude Code (CLI)",
+  "model": "deepseek-v4-pro",
+  "updated": "2026-08-30",
+  "backup_note": "本文件随阶段推进持续更新。上下文压缩前请先备份：复制本文件为 prompt/prompt_log_backup_<日期>.json，再将新记录追加到本文件。",
+  "records": [
+    {
+      "id": 1,
+      "date": "2026-08-30",
+      "stage": "项目初始化",
+      "role": "user",
+      "user_prompt": "https://github.com/jys642/jys/tree/main拉取到该文件夹内",
+      "assistant_actions": [
+        "克隆 GitHub 仓库 jys642/jys 到 f:/JYS（main 分支）",
+        "将 README.md、方案设计.md、选题说明.md、学习笔记.md 及 .git 移入工作区"
+      ],
+      "result": "仓库同步完成，本地与 origin/main 一致；原任务书 PDF 保留为未跟踪文件"
+    },
+    {
+      "id": 2,
+      "date": "2026-08-30",
+      "stage": "阶段一：数据准备",
+      "role": "user",
+      "user_prompt": "分析该项目下的所有文件，完成下述目标：1. 数据来源——准备好课程设计所需数据（小数据提交/data；公开数据集给出有效链接并说明；自建大数据开源到 huggingface/modelscope）；2. 数据预处理——完成预处理程序，/data 更新预处理结果或索引，README 同步；3. AI工具提示词追溯——创建 prompt 目录，添加 AI 交流记录 JSON，每阶段更新，压缩前备份。",
+      "assistant_actions": [
+        "读取方案设计.md / 选题说明.md / 学习笔记.md / 任务书 PDF，理解项目为药板药片缺陷检测系统",
+        "调研公开数据集（Kaggle paracetamol-defect-dataset、pill-defect-dataset、PerceptiLabs/Pill-Defects）",
+        "建立规划文件 task_plan.md / findings.md / progress.md",
+        "编写 data/generate_dataset.py，生成 120 张自建合成泡罩药板图像 + YOLO 标注（6 类缺陷）",
+        "编写 data/preprocess.py，实现灰度化/高斯滤波/CLAHE/ROI/尺寸归一化 + 增广 + 划分，输出 480 张到 data/processed 及 index.json",
+        "编写 data/README.md 说明数据来源与预处理"
+      ],
+      "result": "data/raw 120 张（372 标注）、data/processed 480 张（train/val/test=384/48/48）、index.json 索引完成"
+    },
+    {
+      "id": 3,
+      "date": "2026-08-30",
+      "stage": "阶段一：选题合规性确认",
+      "role": "user",
+      "user_prompt": "这个选题是否符合课设要求？",
+      "assistant_actions": [
+        "用 Python (PyMuPDF) 提取任务书 PDF 文本",
+        "逐条对照选题要求（场景/内容/架构/数据）"
+      ],
+      "result": "符合课设要求（质量控制场景 + 3 项技术方向 + 完整 B/S 架构 + 公开工业数据集）。提醒三点：技术方向须真实发挥作用非装饰；缺粒与漏装类别需明确判定口径；架构完整优先于功能数量"
+    },
+    {
+      "id": 4,
+      "date": "2026-08-30",
+      "stage": "阶段一：数据来源方案调整",
+      "role": "user",
+      "user_prompt": "公开数据集，引用链接，在readme中说清楚。自建数据集在hugging face 或modelscope 开源后，再引用链接。",
+      "assistant_actions": [
+        "将自建数据集由「直接提交仓库」调整为「开源到 HuggingFace/ModelScope 后引用链接」方案",
+        "编写 data/upload_to_hf.py 上传脚本与 data/hf_dataset_card.md 数据集卡片",
+        "更新 README.md 与 data/README.md：公开数据集用引用链接、自建数据集标注开源链接（占位待填）"
+      ],
+      "result": "数据来源调整为「公开数据集引用链接 + 自建数据集开源到 HF/ModelScope 后引用链接」，上传需用户账号执行，完成后回填实际链接"
+    }
+  ]
+}
