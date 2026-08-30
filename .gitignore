@@ -1,0 +1,9 @@
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 自建数据集二进制文件（已开源到 HuggingFace，本地副本不入库，通过平台链接引用）
+data/raw/images/
+data/raw/labels/
+data/processed/images/
+data/processed/labels/
