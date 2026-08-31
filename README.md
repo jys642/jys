@@ -28,10 +28,11 @@
 │   ├── features.py           # 缺陷特征提取
 │   ├── classifier.py         # 随机森林二次校验模块
 │   └── pipeline.py           # 端到端检测管线
-├── scripts/                  # 训练与推理脚本
+├── scripts/                  # 训练、推理与测试脚本
 │   ├── train_yolo.py         # 训练 YOLO 检测模型
 │   ├── train_rf.py           # 训练随机森林校验模型
-│   └── demo.py               # 端到端推理 Demo
+│   ├── demo.py               # 端到端推理 Demo
+│   └── test_system.py        # 系统集成与功能测试（阶段五）
 ├── models/                   # 训练好的模型权重
 │   ├── best.pt               # YOLO11n 检测模型（微调）
 │   └── rf_classifier.pkl     # 随机森林二次校验模型
@@ -130,6 +131,21 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 - 缺陷框标注、类别、置信度由后端返回的标注图 + 结构化 JSON 双重呈现
 - 后端以 `StaticFiles` 托管前端，同源部署，避免跨域问题
 
+## 系统集成与功能测试（阶段五）
+
+系统级测试脚本 [scripts/test_system.py](scripts/test_system.py)，覆盖三部分：
+
+1. **测试样本验证**：对 test 集全部 48 张样本执行端到端推理，与真实标注框做 IoU 匹配，输出整体与类别级 Precision / Recall / F1，并对比「YOLO + 随机森林」与「仅 YOLO」。
+2. **后端接口全流程**：用 TestClient 走通「上传检测 → 入库 → 历史 → 详情 → 统计 → 图片返回 → 404 兜底」。
+3. **前端静态资源**：校验首页与 css/js 正常返回。
+
+```bash
+python scripts/test_system.py            # 跑全部 test 集（48 张）
+python scripts/test_system.py --limit 10 # 只跑前 10 张（快速验证）
+```
+
+**测试结论**（见 [progress.md](progress.md)）：test 集最终 Precision=0.969、Recall=1.000、F1=0.984。测试中发现并修复了随机森林二次校验的融合策略缺陷——原「RF 置信度 ≥0.5 即覆盖 YOLO」过于激进，会在 YOLO 已高置信时被 RF 中等置信的误判覆盖；现已引入 `YOLO_CONF_GATE` 门限，改为「YOLO 自信优先、YOLO 不确定时才允许 RF 覆盖」，使 RF 真正作为「不确定时的安全网」发挥作用。
+
 ## AI 工具提示词追溯
 
 本课程设计全程使用 **Claude Code**（模型 deepseek-v4-pro）辅助开发。与 AI 的交流记录（提示词、AI 操作、结果摘要）以 JSON 形式留存于 [prompt/prompt_log.json](prompt/prompt_log.json)，并随每个阶段同步更新。
@@ -155,7 +171,10 @@ python scripts/train_rf.py
 # 4. 端到端推理 Demo（输出检测结果与可视化标注图）
 python scripts/demo.py
 
-# 5. 启动后端服务（同时托管前端页面）
+# 5. 系统集成与功能测试（阶段五：test 集评估 + 接口全流程 + 前端）
+python scripts/test_system.py
+
+# 6. 启动后端服务（同时托管前端页面）
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 # 浏览器访问 http://127.0.0.1:8000/ 使用系统
 ```
@@ -170,5 +189,5 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 | 阶段二 | 算法模块开发（预处理 / YOLO / 随机森林） | ✅ 已完成（本阶段） |
 | 阶段三 | 后端服务接口开发（FastAPI + SQLite） | ✅ 已完成（本阶段） |
 | 阶段四 | 前端 UI 页面开发 | ✅ 已完成（本阶段） |
-| 阶段五 | 系统集成与功能测试 | 待开发 |
+| 阶段五 | 系统集成与功能测试 | ✅ 已完成（本阶段） |
 | 阶段六 | 系统输出与文档整理 | 待开发 |

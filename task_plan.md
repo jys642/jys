@@ -40,6 +40,12 @@
 - [x] app/main.py 托管前端静态资源（StaticFiles + 首页路由）
 - [x] TestClient + uvicorn 端到端联调通过
 
+## 阶段五（系统集成与功能测试，已完成）
+- [x] 编写 scripts/test_system.py（test 集端到端评估 + 后端接口全流程 + 前端静态资源）
+- [x] 48 张 test 样本 IoU 匹配评估（Precision/Recall/F1 + 类别级 + YOLO/RF 对比）
+- [x] 修复随机森林融合策略缺陷（引入 YOLO_CONF_GATE，RF 改为 YOLO 不确定时的安全网）
+- [x] 后端 5 接口 + 前端静态资源全流程联调通过
+- [x] 测试产物清理（detection.db / uploads 不入库）
+
 ## 后续阶段（待规划）
-- 阶段五：系统集成与功能测试。
 - 阶段六：系统输出与文档整理。

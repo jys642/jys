@@ -115,6 +115,21 @@
         "用 TestClient 与真实 uvicorn 做端到端联调验证"
       ],
       "result": "前端页面完成：上传检测、历史记录、统计分析三大页面可用，后端托管前端，启动后浏览器访问 http://127.0.0.1:8000/ 即可完成全流程质检"
+    },
+    {
+      "id": 9,
+      "date": "2026-08-31",
+      "stage": "阶段五：系统集成与功能测试",
+      "role": "user",
+      "user_prompt": "继续",
+      "assistant_actions": [
+        "编写 scripts/test_system.py：test 集 48 张真值 IoU 匹配评估（Precision/Recall/F1 + 类别级 + YOLO/RF 对比）+ 后端接口全流程 + 前端静态资源校验",
+        "运行集成测试，发现随机森林二次校验融合策略缺陷：原「RF≥0.5 就覆盖」过于激进，在 YOLO 高置信时被 RF 中等置信误判覆盖，F1 从 0.984 掉到 0.944",
+        "诊断 RF 改对/改错置信度分布，引入 YOLO_CONF_GATE=0.5：改为「YOLO 自信优先、不确定才允许 RF 覆盖」，把 RF 定位为不确定时的安全网",
+        "修复后重跑测试：test 集最终 Precision=0.969 / Recall=1.000 / F1=0.984，后端 5 接口 + 前端静态资源全流程通过",
+        "清理测试产物（app/detection.db、app/uploads/），更新 task_plan/progress/findings/README"
+      ],
+      "result": "系统集成测试完成：48 张测试样本端到端验证 + 后端接口全流程联调 + 前端静态资源校验全部通过；并发现修复了随机森林融合策略缺陷（YOLO_CONF_GATE 门限融合）"
     }
   ]
 }

@@ -6,11 +6,11 @@
 
 二次校验策略：
     对每个 YOLO 检测框提取特征，用随机森林再分类；
-    - 若 RF 置信度 ≥ 阈值，以 RF 类别修正 YOLO 初步类别（修正误检）；
-    - 否则保留 YOLO 结果（RF 不确定时不强行覆盖）。
+    - YOLO 自信（conf ≥ YOLO_CONF_GATE）时优先信任 YOLO，RF 仅作参考；
+    - YOLO 不确定且 RF 置信度 ≥ 阈值时，以 RF 类别修正（RF 作为「不确定时的安全网」）。
 ================================================================
 """
-from src.config import RF_CONF
+from src.config import RF_CONF, YOLO_CONF_GATE
 from src.classifier import DefectClassifier
 from src.detection import YoloDetector
 from src.features import extract_features
@@ -43,7 +43,10 @@ class DetectionPipeline:
             feat = extract_features(proc, d["bbox"])     # 3. 特征提取
             rf = self.classifier.predict(feat)           # 4. RF 二次校验
 
-            if rf["proba"] >= rf_conf:                   # 5. 校验结果融合
+            # 5. 校验结果融合（RF 作为 YOLO 不确定时的安全网）
+            #    - YOLO 自信（conf ≥ 门限）时优先信 YOLO，避免 RF 中等置信度误判覆盖正确结果；
+            #    - YOLO 不确定且 RF 自信（proba ≥ 阈值）时，用 RF 修正。
+            if d["conf"] < YOLO_CONF_GATE and rf["proba"] >= rf_conf:
                 final_cls, final_name = rf["class_id"], rf["class_name"]
             else:
                 final_cls, final_name = d["class_id"], d["class_name"]

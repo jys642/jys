@@ -42,3 +42,4 @@ YOLO_BATCH = 8
 YOLO_CONF = 0.25      # YOLO 推理置信度阈值
 YOLO_IOU = 0.45       # NMS IoU 阈值
 RF_CONF = 0.5         # 随机森林二次校验置信度阈值（低于则保留 YOLO 结果）
+YOLO_CONF_GATE = 0.5  # YOLO 置信度门限：低于此值才允许 RF 覆盖（YOLO 自信时优先信 YOLO）
