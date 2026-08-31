@@ -28,6 +28,13 @@
 - 用 TestClient 自测全部接口通过（检测 3 处缺陷、入库、列表、详情、统计、图片返回、404 兜底）。
 - .gitignore 忽略 app/detection.db 与 app/uploads/，requirements.txt 增加 python-multipart。
 
+## 2026-08-31（阶段四：前端 UI 页面开发，已完成）
+- 编写 frontend/ 单页应用：index.html（上传检测/历史记录/统计分析三视图）、style.css（医药工业质检风格）、app.js（fetch 对接后端 API）。
+- 对接 4 个功能页面：图片上传 + 缺陷可视化、历史记录查询（含详情弹窗）、质检缺陷统计分析（卡片 + Chart.js 柱状图）。
+- 修改 app/main.py：用 StaticFiles 托管前端静态资源，首页路由返回 index.html，同源部署免跨域。
+- 用 TestClient 与真实 uvicorn 冒烟测试：首页/静态资源/检测/统计/标注图接口全部正常。
+
 ## 待办（下一阶段）
-- 阶段四：前端 UI 页面开发（HTML + Bootstrap）。
+- 阶段五：系统集成与功能测试（全流程联调 + 测试样本验证）。
+- 阶段六：系统输出与文档整理。
 - 将 AI 提示词记录在每个阶段持续更新到 prompt/prompt_log.json。

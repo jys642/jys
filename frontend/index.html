@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>药板药片外观缺陷智能检测系统</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <nav class="navbar app-navbar">
+    <div class="container app-navbar-inner">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <div class="brand-text">
+          <div class="brand-title">药板药片外观缺陷智能检测系统</div>
+          <div class="brand-sub">Pharmaceutical Blister Defect Inspection</div>
+        </div>
+      </div>
+      <div class="app-nav">
+        <button class="nav-link active" data-view="detect">在线检测</button>
+        <button class="nav-link" data-view="history">历史记录</button>
+        <button class="nav-link" data-view="stats">统计分析</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container app-main">
+
+    <!-- ============ 视图 1：在线检测 ============ -->
+    <section id="view-detect" class="view active">
+      <div class="row g-4">
+        <!-- 上传区 -->
+        <div class="col-lg-5">
+          <div class="card panel">
+            <div class="panel-head">
+              <h2>上传药板图片</h2>
+              <p>支持 JPG / PNG 等格式，系统将自动完成预处理、缺陷检测与二次校验</p>
+            </div>
+            <div class="panel-body">
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div class="upload-icon">＋</div>
+                <div class="upload-text">点击选择或拖拽图片到此处</div>
+                <div class="upload-hint">分辨率建议 ≥ 640×640</div>
+              </div>
+              <div class="preview" id="preview" hidden>
+                <img id="previewImg" alt="待检测图片预览">
+              </div>
+              <button class="btn btn-primary w-100" id="detectBtn" disabled>开始检测</button>
+              <div class="status" id="detectStatus" hidden></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 结果区 -->
+        <div class="col-lg-7">
+          <div class="card panel" id="resultPanel" hidden>
+            <div class="panel-head result-head">
+              <h2>检测结果</h2>
+              <span class="badge conclusion" id="conclusionBadge"></span>
+            </div>
+            <div class="panel-body">
+              <div class="result-image-wrap">
+                <img id="resultImage" alt="缺陷标注结果">
+              </div>
+              <div class="defect-list" id="defectList"></div>
+            </div>
+          </div>
+
+          <!-- 空状态 -->
+          <div class="card panel empty-panel" id="emptyPanel">
+            <div class="panel-body empty-body">
+              <div class="empty-icon">🔍</div>
+              <h3>等待检测</h3>
+              <p>上传一张药板图片，检测结果将在这里呈现</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 视图 2：历史记录 ============ -->
+    <section id="view-history" class="view">
+      <div class="card panel">
+        <div class="panel-head">
+          <h2>历史检测记录</h2>
+          <p>检测结果持久化存储，支持回溯查询</p>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table align-middle" id="historyTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>图片</th>
+                  <th>检测时间</th>
+                  <th>缺陷数</th>
+                  <th>结论</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-hint" id="historyEmpty" hidden>暂无检测记录</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 视图 3：统计分析 ============ -->
+    <section id="view-stats" class="view">
+      <div class="row g-4 stat-cards" id="statCards"></div>
+      <div class="card panel mt-4">
+        <div class="panel-head">
+          <h2>缺陷类型分布</h2>
+          <p>各类别缺陷累计检出数量</p>
+        </div>
+        <div class="panel-body">
+          <div class="chart-wrap">
+            <canvas id="defectChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 详情弹窗 -->
+  <div class="modal fade" id="detailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">检测详情</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-meta" id="detailMeta"></div>
+          <div class="result-image-wrap">
+            <img id="detailImage" alt="检测标注图">
+          </div>
+          <div class="defect-list" id="detailDefects"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="static/app.js"></script>
+</body>
+</html>

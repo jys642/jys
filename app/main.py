@@ -24,6 +24,7 @@ import numpy as np
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from src.config import CLASS_CN, RF_MODEL, ROOT, YOLO_MODEL
 from src.pipeline import DetectionPipeline
@@ -34,6 +35,8 @@ from app.schemas import (DefectItem, DetectionResult, RecordDetail,
 UPLOAD_DIR = os.path.join(ROOT, "app", "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+FRONTEND_DIR = os.path.join(ROOT, "frontend")
+
 app = FastAPI(title="药板药片外观缺陷智能检测系统 API", version="1.0.0")
 
 # 跨域：阶段四前端页面跨端口调用
@@ -43,6 +46,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 托管前端静态资源（css/js），首页由下方 index 路由返回
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 # 全局检测管线（加载 YOLO + 随机森林模型）
 pipeline = DetectionPipeline(YOLO_MODEL, RF_MODEL)
@@ -66,18 +72,10 @@ def draw_boxes(img, defects):
     return annotated
 
 
-@app.get("/")
-def root():
-    return {
-        "service": "药板药片外观缺陷智能检测系统 API",
-        "endpoints": {
-            "POST /api/detect": "上传图片并检测缺陷",
-            "GET /api/records": "历史检测记录（分页）",
-            "GET /api/records/{id}": "单条记录详情",
-            "GET /api/statistics": "缺陷类型统计",
-            "GET /api/image/{name}": "获取已上传图像",
-        },
-    }
+@app.get("/", include_in_schema=False)
+def index():
+    """首页：返回前端单页应用。"""
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 
 @app.post("/api/detect", response_model=DetectionResult)

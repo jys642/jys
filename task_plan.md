@@ -34,6 +34,12 @@
 - [x] TestClient 全接口自测通过
 - [x] .gitignore / requirements.txt / README 同步
 
+## 阶段四（前端 UI 页面开发，已完成）
+- [x] 编写 frontend/ 单页应用（index.html / style.css / app.js）
+- [x] 实现上传检测、历史记录、统计分析三大页面
+- [x] app/main.py 托管前端静态资源（StaticFiles + 首页路由）
+- [x] TestClient + uvicorn 端到端联调通过
+
 ## 后续阶段（待规划）
-- 阶段四：前端 UI 页面开发。
-- 阶段五～六：系统集成测试、文档整理。
+- 阶段五：系统集成与功能测试。
+- 阶段六：系统输出与文档整理。

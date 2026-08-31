@@ -24,3 +24,7 @@
 ## 阶段三后端调研结论
 - FastAPI 文件上传（UploadFile）需 python-multipart 依赖；用 starlette TestClient（依赖 httpx）可脱离真实服务器对接口做全链路自测。
 - SQLite 用标准库 sqlite3 + Row 工厂即可满足课程设计轻量持久化，无需引入 ORM。
+
+## 阶段四前端调研结论
+- 前端采用 Bootstrap 5 + 原生 fetch + Chart.js；后端用 StaticFiles 托管前端实现同源部署，避免 CORS 配置与跨域问题。
+- 单页应用（SPA）三视图切换比多页面更适合质检工作流：上传→看结果→查历史→看统计在一个入口内完成。

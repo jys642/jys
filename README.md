@@ -39,6 +39,10 @@
 │   ├── main.py               # FastAPI 应用与接口路由
 │   ├── database.py           # SQLite 数据库（记录 + 缺陷明细）
 │   └── schemas.py            # Pydantic 响应模型
+├── frontend/                 # 前端页面（阶段四，HTML + Bootstrap）
+│   ├── index.html            # 单页应用（上传检测 / 历史 / 统计）
+│   ├── style.css             # 自定义样式
+│   └── app.js                # 交互逻辑（对接后端 API）
 ├── requirements.txt          # Python 依赖清单
 └── prompt/                   # AI 工具提示词追溯记录
     └── prompt_log.json       # 与 AI 交流的提示词/会话日志
@@ -110,6 +114,22 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 # 交互式 API 文档：http://127.0.0.1:8000/docs
 ```
 
+## 前端页面（阶段四）
+
+单页应用（[frontend/index.html](frontend/index.html)），Bootstrap + 原生 JS + Chart.js，由后端托管。启动后端后浏览器访问 `http://127.0.0.1:8000/` 即可使用。
+
+### 页面功能
+
+- **在线检测**：拖拽/选择上传药板图片并预览，检测后展示缺陷标注图、缺陷类别/置信度/YOLO-RF 校验详情、质检结论（合格/不合格）
+- **历史记录**：表格展示历史检测记录，点击查看单条详情（标注图 + 缺陷明细）
+- **统计分析**：累计检测次数 / 缺陷数 / 平均每板缺陷三张卡片 + 缺陷类型分布柱状图
+
+### 技术要点
+
+- 三个视图通过顶部导航切换，前端 `fetch` 调用 `/api/*` 接口
+- 缺陷框标注、类别、置信度由后端返回的标注图 + 结构化 JSON 双重呈现
+- 后端以 `StaticFiles` 托管前端，同源部署，避免跨域问题
+
 ## AI 工具提示词追溯
 
 本课程设计全程使用 **Claude Code**（模型 deepseek-v4-pro）辅助开发。与 AI 的交流记录（提示词、AI 操作、结果摘要）以 JSON 形式留存于 [prompt/prompt_log.json](prompt/prompt_log.json)，并随每个阶段同步更新。
@@ -135,8 +155,9 @@ python scripts/train_rf.py
 # 4. 端到端推理 Demo（输出检测结果与可视化标注图）
 python scripts/demo.py
 
-# 5. 启动后端服务
+# 5. 启动后端服务（同时托管前端页面）
 uvicorn app.main:app --host 0.0.0.0 --port 8000
+# 浏览器访问 http://127.0.0.1:8000/ 使用系统
 ```
 
 依赖：Python 3.9+，见 [requirements.txt](requirements.txt)。
@@ -148,6 +169,6 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 | 阶段一 | 方案确认与数据准备 | ✅ 已完成（本阶段） |
 | 阶段二 | 算法模块开发（预处理 / YOLO / 随机森林） | ✅ 已完成（本阶段） |
 | 阶段三 | 后端服务接口开发（FastAPI + SQLite） | ✅ 已完成（本阶段） |
-| 阶段四 | 前端 UI 页面开发 | 待开发 |
+| 阶段四 | 前端 UI 页面开发 | ✅ 已完成（本阶段） |
 | 阶段五 | 系统集成与功能测试 | 待开发 |
 | 阶段六 | 系统输出与文档整理 | 待开发 |
