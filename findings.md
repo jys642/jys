@@ -20,3 +20,7 @@
 - ultralytics 8.4.91 已把「命名资产」迁移到 YOLO11/SAM/RT-DETR 系列，`yolo8n.pt` 不在直连清单内，下载需走 GitHub API（本环境 IP 触发 403 限流）；`yolo11n.pt` 在清单内，走直连下载 `.../releases/download/v8.4.0/yolo11n.pt`（HTTP 200）。
 - 决策：YOLO 检测模块采用 **yolo11n** 预训练权重微调（比 v8 更新、更快、精度相当），文档同步说明。
 - 随机森林 18 维特征中，几何（hu1、circularity、perimeter、fill_ratio）与灰度（min_gray、gray_range、std_gray）贡献最大，符合「缺陷形态/灰度差异」直觉。
+
+## 阶段三后端调研结论
+- FastAPI 文件上传（UploadFile）需 python-multipart 依赖；用 starlette TestClient（依赖 httpx）可脱离真实服务器对接口做全链路自测。
+- SQLite 用标准库 sqlite3 + Row 工厂即可满足课程设计轻量持久化，无需引入 ORM。

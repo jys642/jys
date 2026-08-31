@@ -25,14 +25,15 @@ class DetectionPipeline:
         self.classifier = DefectClassifier(rf_model_path)
 
     def run(self, img_bgr, yolo_conf=0.25, rf_conf=RF_CONF):
-        """输入原始 BGR 图像，返回最终检测结果列表。
+        """输入原始 BGR 图像，返回 (检测结果列表, 预处理后图像)。
 
-        返回：[{
+        检测结果列表项：[{
             "bbox": [x1,y1,x2,y2],
             "yolo_class": str, "yolo_conf": float,
             "rf_class": str, "rf_conf": float,
             "final_class_id": int, "final_class": str, "conf": float,
         }, ...]
+        预处理后图像为 640×640（模型实际输入），供可视化标注框对齐。
         """
         proc = preprocess(img_bgr)                       # 1. 预处理
         dets = self.detector.detect(proc, conf=yolo_conf)  # 2. YOLO 检测
@@ -57,4 +58,4 @@ class DetectionPipeline:
                 "final_class": final_name,
                 "conf": round(d["conf"], 4),
             })
-        return results
+        return results, proc

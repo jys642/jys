@@ -35,6 +35,10 @@
 ├── models/                   # 训练好的模型权重
 │   ├── best.pt               # YOLO11n 检测模型（微调）
 │   └── rf_classifier.pkl     # 随机森林二次校验模型
+├── app/                      # 后端服务（阶段三，FastAPI + SQLite）
+│   ├── main.py               # FastAPI 应用与接口路由
+│   ├── database.py           # SQLite 数据库（记录 + 缺陷明细）
+│   └── schemas.py            # Pydantic 响应模型
 ├── requirements.txt          # Python 依赖清单
 └── prompt/                   # AI 工具提示词追溯记录
     └── prompt_log.json       # 与 AI 交流的提示词/会话日志
@@ -80,6 +84,32 @@
 ### 端到端管线（[src/pipeline.py](src/pipeline.py)）
 `预处理 → YOLO 检测 → 随机森林校验` 串联为 `DetectionPipeline.run()`，`scripts/demo.py` 提供命令行推理演示并输出可视化标注图。
 
+## 后端服务（阶段三）
+
+基于 FastAPI + SQLite，调用阶段二算法管线完成在线检测与结果持久化（入口 [app/main.py](app/main.py)）。
+
+### 接口一览
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| POST | `/api/detect` | 上传药板图片，执行预处理 + YOLO + 随机森林校验，返回缺陷结果并入库 |
+| GET | `/api/records` | 历史检测记录列表（分页 `limit`/`offset`） |
+| GET | `/api/records/{id}` | 单条记录详情（含缺陷明细） |
+| GET | `/api/statistics` | 缺陷类型统计（总量 + 各类别计数） |
+| GET | `/api/image/{name}` | 返回已上传图像（原图 / 标注图） |
+
+### 数据库表
+
+- `records`：检测记录（图片路径、时间、缺陷数、质检结论）
+- `defects`：缺陷明细（类别、置信度、框坐标、YOLO/RF 校验结果）
+
+### 启动
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+# 交互式 API 文档：http://127.0.0.1:8000/docs
+```
+
 ## AI 工具提示词追溯
 
 本课程设计全程使用 **Claude Code**（模型 deepseek-v4-pro）辅助开发。与 AI 的交流记录（提示词、AI 操作、结果摘要）以 JSON 形式留存于 [prompt/prompt_log.json](prompt/prompt_log.json)，并随每个阶段同步更新。
@@ -104,6 +134,9 @@ python scripts/train_rf.py
 
 # 4. 端到端推理 Demo（输出检测结果与可视化标注图）
 python scripts/demo.py
+
+# 5. 启动后端服务
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 依赖：Python 3.9+，见 [requirements.txt](requirements.txt)。
@@ -114,7 +147,7 @@ python scripts/demo.py
 |---|---|---|
 | 阶段一 | 方案确认与数据准备 | ✅ 已完成（本阶段） |
 | 阶段二 | 算法模块开发（预处理 / YOLO / 随机森林） | ✅ 已完成（本阶段） |
-| 阶段三 | 后端服务接口开发（FastAPI + SQLite） | 待开发 |
+| 阶段三 | 后端服务接口开发（FastAPI + SQLite） | ✅ 已完成（本阶段） |
 | 阶段四 | 前端 UI 页面开发 | 待开发 |
 | 阶段五 | 系统集成与功能测试 | 待开发 |
 | 阶段六 | 系统输出与文档整理 | 待开发 |

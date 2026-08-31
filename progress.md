@@ -20,7 +20,14 @@
 - 补充 requirements.txt、models/README.md，.gitignore 忽略 runs/ 与 data/yolo_dataset/。
 - 更新 README.md：新增「算法模块（阶段二）」章节，同步项目结构与快速开始命令。
 
+## 2026-08-31（阶段三：后端服务接口开发，已完成）
+- 搭建 app/ 后端包：main（FastAPI 应用 + 路由）、database（SQLite 建表 + 高层查询函数）、schemas（Pydantic 响应模型）。
+- 实现 5 个接口：POST /api/detect（上传+检测+入库）、GET /api/records（分页列表）、GET /api/records/{id}（详情）、GET /api/statistics（统计）、GET /api/image/{name}（返回图片）。
+- SQLite 两张表 records（检测记录）+ defects（缺陷明细），外键关联，质检结论（合格/不合格）自动判定。
+- 管线增强：pipeline.run 返回 (结果, 预处理图)，便于在模型输入图上绘制标注框。
+- 用 TestClient 自测全部接口通过（检测 3 处缺陷、入库、列表、详情、统计、图片返回、404 兜底）。
+- .gitignore 忽略 app/detection.db 与 app/uploads/，requirements.txt 增加 python-multipart。
+
 ## 待办（下一阶段）
-- 阶段三：后端服务接口开发（FastAPI + SQLite）。
-- 阶段四：前端 UI 页面开发。
+- 阶段四：前端 UI 页面开发（HTML + Bootstrap）。
 - 将 AI 提示词记录在每个阶段持续更新到 prompt/prompt_log.json。

@@ -27,7 +27,13 @@
 - [x] 端到端推理 demo（scripts/demo.py）
 - [x] requirements.txt / models 说明 / .gitignore / README 同步
 
+## 阶段三（后端服务接口开发，已完成）
+- [x] 搭建 app/ 后端包（main / database / schemas）
+- [x] 实现图片上传+检测、历史查询、详情、统计、图片返回 5 个接口
+- [x] SQLite 建表（records + defects）与持久化
+- [x] TestClient 全接口自测通过
+- [x] .gitignore / requirements.txt / README 同步
+
 ## 后续阶段（待规划）
-- 阶段三：后端服务接口开发（FastAPI + SQLite）。
 - 阶段四：前端 UI 页面开发。
 - 阶段五～六：系统集成测试、文档整理。

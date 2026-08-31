@@ -86,6 +86,21 @@
         "补充 requirements.txt、models/README.md，.gitignore 忽略 runs/ 与 data/yolo_dataset/"
       ],
       "result": "三大算法模块实现并完成训练：随机森林（1364 样本/18 特征）与 YOLO 检测均产出模型权重；因 ultralytics 8.4 已不支持 yolo8n 且 GitHub API 限流，YOLO 改用 yolo11n 预训练权重"
+    },
+    {
+      "id": 7,
+      "date": "2026-08-31",
+      "stage": "阶段三：后端服务接口开发",
+      "role": "user",
+      "user_prompt": "继续阶段三",
+      "assistant_actions": [
+        "搭建 app/ 后端包：main（FastAPI 应用 + 路由）、database（SQLite 建表 + 查询函数）、schemas（Pydantic 响应模型）",
+        "实现 5 个接口：POST /api/detect（上传+检测+入库）、GET /api/records、GET /api/records/{id}、GET /api/statistics、GET /api/image/{name}",
+        "SQLite 建 records（检测记录）+ defects（缺陷明细）两张表并持久化",
+        "增强 pipeline.run 返回预处理图，用于标注框对齐",
+        "用 TestClient 对全部接口自测通过"
+      ],
+      "result": "后端服务完成：上传药板图即执行预处理+YOLO+随机森林校验并入库，历史查询、详情、统计、图片返回接口全部可用，自测 3 处缺陷检测正确"
     }
   ]
 }

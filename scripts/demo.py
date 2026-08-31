@@ -50,7 +50,7 @@ def main():
         name, img = test_names[0], cv2.imread(os.path.join(PROC_IMG, test_names[0]))
 
     pipe = DetectionPipeline(YOLO_MODEL, RF_MODEL)
-    results = pipe.run(img)
+    results, proc = pipe.run(img)
 
     print(f"图像：{name}")
     print(f"检出缺陷 {len(results)} 处：")
@@ -63,7 +63,7 @@ def main():
 
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, name)
-    cv2.imwrite(out_path, draw_results(img, results))
+    cv2.imwrite(out_path, draw_results(proc, results))
     print(f"可视化结果：{out_path}")
 
 
