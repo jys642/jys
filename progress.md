@@ -12,6 +12,15 @@
 - 【提示词追溯】创建 prompt/prompt_log.json，记录 3 条 AI 交流记录（克隆、数据准备、选题合规确认），并注明压缩前备份规则。
 - 更新 README.md，同步数据来源、预处理、提示词追溯说明。
 
+## 2026-08-31（阶段二：算法模块开发，已完成）
+- 搭建 src/ 算法模块包：config（类别/路径/超参数）、preprocessing（预处理）、detection（YOLO 检测）、features（18 维特征提取）、classifier（随机森林校验）、pipeline（端到端管线）。
+- 编写 scripts/train_yolo.py（按 index.json 构建 YOLO 数据集 + 微调）、scripts/train_rf.py（真实标注框提取特征 + 训练）、scripts/demo.py（端到端推理可视化）。
+- 训练随机森林二次校验模型：1364 个缺陷样本、18 维特征、200 棵树，保存 models/rf_classifier.pkl；特征重要度 Top 为 hu1/circularity/min_gray/gray_range/std_gray。
+- 训练 YOLO 检测模型：基于 yolo11n 预训练权重微调（yolo8n 已不被 ultralytics 8.4 支持且 GitHub API 限流，故改用 yolo11n），保存 models/best.pt。
+- 补充 requirements.txt、models/README.md，.gitignore 忽略 runs/ 与 data/yolo_dataset/。
+- 更新 README.md：新增「算法模块（阶段二）」章节，同步项目结构与快速开始命令。
+
 ## 待办（下一阶段）
-- 阶段二：算法模块开发（图像预处理模块 / YOLO 检测 / 随机森林校验）。
+- 阶段三：后端服务接口开发（FastAPI + SQLite）。
+- 阶段四：前端 UI 页面开发。
 - 将 AI 提示词记录在每个阶段持续更新到 prompt/prompt_log.json。

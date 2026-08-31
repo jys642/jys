@@ -15,3 +15,8 @@
 ## 决策
 - 主引用 Kaggle 公开数据集（链接有效、可下载），作为大规模训练数据来源。
 - 同时自建小规模合成数据集（脚本生成 + YOLO 标注）直接提交 /data，保证课程设计可运行与可复现。
+
+## 阶段二算法调研结论
+- ultralytics 8.4.91 已把「命名资产」迁移到 YOLO11/SAM/RT-DETR 系列，`yolo8n.pt` 不在直连清单内，下载需走 GitHub API（本环境 IP 触发 403 限流）；`yolo11n.pt` 在清单内，走直连下载 `.../releases/download/v8.4.0/yolo11n.pt`（HTTP 200）。
+- 决策：YOLO 检测模块采用 **yolo11n** 预训练权重微调（比 v8 更新、更快、精度相当），文档同步说明。
+- 随机森林 18 维特征中，几何（hu1、circularity、perimeter、fill_ratio）与灰度（min_gray、gray_range、std_gray）贡献最大，符合「缺陷形态/灰度差异」直觉。

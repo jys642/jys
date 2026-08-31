@@ -21,6 +21,21 @@
 │   ├── preprocess.py         # 数据预处理脚本
 │   ├── raw/                  # 原始数据（自建合成，120 张 + YOLO 标注）
 │   └── processed/            # 预处理 + 增广后数据（480 张 + index.json）
+├── src/                      # 算法模块（阶段二）
+│   ├── config.py             # 全局配置（类别 / 路径 / 超参数）
+│   ├── preprocessing.py      # 图像预处理模块
+│   ├── detection.py          # YOLO 缺陷检测模块
+│   ├── features.py           # 缺陷特征提取
+│   ├── classifier.py         # 随机森林二次校验模块
+│   └── pipeline.py           # 端到端检测管线
+├── scripts/                  # 训练与推理脚本
+│   ├── train_yolo.py         # 训练 YOLO 检测模型
+│   ├── train_rf.py           # 训练随机森林校验模型
+│   └── demo.py               # 端到端推理 Demo
+├── models/                   # 训练好的模型权重
+│   ├── best.pt               # YOLO11n 检测模型（微调）
+│   └── rf_classifier.pkl     # 随机森林二次校验模型
+├── requirements.txt          # Python 依赖清单
 └── prompt/                   # AI 工具提示词追溯记录
     └── prompt_log.json       # 与 AI 交流的提示词/会话日志
 ```
@@ -49,6 +64,22 @@
 
 数据增广：水平翻转、旋转 90°、亮度增强。划分：80/10/10 → train/val/test（384/48/48），固定种子保证可复现，索引见 [data/processed/index.json](data/processed/index.json)。
 
+## 算法模块（阶段二）
+
+三大算法模块位于 `src/`，训练脚本在 `scripts/`，模型权重在 `models/`，与《方案设计》技术路线一一对应：
+
+### 1. 图像预处理模块（[src/preprocessing.py](src/preprocessing.py)）
+实现灰度化（可选）、高斯滤波去噪、CLAHE 对比度增强、ROI 区域裁剪、尺寸归一化，统一为 640×640 输入，抑制铝箔反光/噪声，优化模型输入。
+
+### 2. YOLO 缺陷检测模块（[src/detection.py](src/detection.py)）
+基于 ultralytics **YOLO11n** 预训练权重在自建合成数据集上微调，输出缺陷定位框、初步类别与置信度。训练：`python scripts/train_yolo.py`（产物 `models/best.pt`）。
+
+### 3. 随机森林二次校验模块（[src/classifier.py](src/classifier.py) + [src/features.py](src/features.py)）
+从检测框区域提取 18 维特征（几何/灰度/纹理），用随机森林（200 棵树）对 YOLO 结果二次分类：RF 置信度足够时修正误检类别，否则保留 YOLO 结果。训练：`python scripts/train_rf.py`（产物 `models/rf_classifier.pkl`）。
+
+### 端到端管线（[src/pipeline.py](src/pipeline.py)）
+`预处理 → YOLO 检测 → 随机森林校验` 串联为 `DetectionPipeline.run()`，`scripts/demo.py` 提供命令行推理演示并输出可视化标注图。
+
 ## AI 工具提示词追溯
 
 本课程设计全程使用 **Claude Code**（模型 deepseek-v4-pro）辅助开发。与 AI 的交流记录（提示词、AI 操作、结果摘要）以 JSON 形式留存于 [prompt/prompt_log.json](prompt/prompt_log.json)，并随每个阶段同步更新。
@@ -58,21 +89,31 @@
 ## 快速开始
 
 ```bash
-# 重新生成自建数据
+# 安装依赖
+pip install -r requirements.txt
+
+# 1. 重新生成自建数据
 python data/generate_dataset.py 120
 
-# 重新执行预处理 + 增广 + 划分
+# 2. 重新执行预处理 + 增广 + 划分
 python data/preprocess.py
+
+# 3. 训练算法模型（YOLO 检测 + 随机森林校验）
+python scripts/train_yolo.py
+python scripts/train_rf.py
+
+# 4. 端到端推理 Demo（输出检测结果与可视化标注图）
+python scripts/demo.py
 ```
 
-依赖：Python 3.9+、numpy、opencv-python。
+依赖：Python 3.9+，见 [requirements.txt](requirements.txt)。
 
 ## 开发阶段规划
 
 | 阶段 | 内容 | 状态 |
 |---|---|---|
 | 阶段一 | 方案确认与数据准备 | ✅ 已完成（本阶段） |
-| 阶段二 | 算法模块开发（预处理 / YOLO / 随机森林） | 待开发 |
+| 阶段二 | 算法模块开发（预处理 / YOLO / 随机森林） | ✅ 已完成（本阶段） |
 | 阶段三 | 后端服务接口开发（FastAPI + SQLite） | 待开发 |
 | 阶段四 | 前端 UI 页面开发 | 待开发 |
 | 阶段五 | 系统集成与功能测试 | 待开发 |

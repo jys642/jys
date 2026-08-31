@@ -1,0 +1,13 @@
+# 药板药片外观缺陷智能检测系统 —— 依赖清单
+# Python 3.9+
+numpy
+opencv-python
+pillow
+torch
+torchvision
+scikit-learn
+joblib
+ultralytics
+fastapi
+uvicorn
+matplotlib

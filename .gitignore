@@ -1,3 +1,9 @@
 # Python 缓存
 __pycache__/
 *.pyc
+
+# YOLO 训练中间产物（最佳权重会复制到 models/ 提交）
+runs/
+
+# YOLO 数据集目录（由 scripts/train_yolo.py 依据 processed 数据生成）
+data/yolo_dataset/
