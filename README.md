@@ -14,6 +14,8 @@
 ├── 选题说明.md               # 项目题目与涉及技术方向
 ├── 方案设计.md               # 功能需求、技术路线、实施计划
 ├── 学习笔记.md               # 课程知识点学习笔记
+├── 课程设计报告.md           # 课程设计报告（阶段六）
+├── 答辩PPT大纲.md            # 答辩 PPT 大纲（阶段六）
 ├── task_plan.md / findings.md / progress.md   # 规划工作流文件
 ├── data/                     # 数据资源（见下方「数据」）
 │   ├── README.md             # 数据来源与预处理详细说明
@@ -146,6 +148,13 @@ python scripts/test_system.py --limit 10 # 只跑前 10 张（快速验证）
 
 **测试结论**（见 [progress.md](progress.md)）：test 集最终 Precision=0.969、Recall=1.000、F1=0.984。测试中发现并修复了随机森林二次校验的融合策略缺陷——原「RF 置信度 ≥0.5 即覆盖 YOLO」过于激进，会在 YOLO 已高置信时被 RF 中等置信的误判覆盖；现已引入 `YOLO_CONF_GATE` 门限，改为「YOLO 自信优先、YOLO 不确定时才允许 RF 覆盖」，使 RF 真正作为「不确定时的安全网」发挥作用。
 
+## 系统输出与文档（阶段六）
+
+- **[课程设计报告.md](课程设计报告.md)**：完整课程设计报告，涵盖背景与研究意义、方案设计、数据来源、系统实现、测试与集成、AI 使用、过程总结，并附技术方向 ↔ 实际作用对照表。
+- **[答辩PPT大纲.md](答辩PPT大纲.md)**：15 页答辩汇报 PPT 大纲。
+
+其余交付材料：代码仓库（git 提交历史 + 脚本 + README）、AI 提示词追溯（[prompt/prompt_log.json](prompt/prompt_log.json)）已随开发同步完成；3 分钟演示视频与答辩 PPT 成品为人工后续产出。
+
 ## AI 工具提示词追溯
 
 本课程设计全程使用 **Claude Code**（模型 deepseek-v4-pro）辅助开发。与 AI 的交流记录（提示词、AI 操作、结果摘要）以 JSON 形式留存于 [prompt/prompt_log.json](prompt/prompt_log.json)，并随每个阶段同步更新。
@@ -190,4 +199,4 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 | 阶段三 | 后端服务接口开发（FastAPI + SQLite） | ✅ 已完成（本阶段） |
 | 阶段四 | 前端 UI 页面开发 | ✅ 已完成（本阶段） |
 | 阶段五 | 系统集成与功能测试 | ✅ 已完成（本阶段） |
-| 阶段六 | 系统输出与文档整理 | 待开发 |
+| 阶段六 | 系统输出与文档整理 | ✅ 已完成（本阶段） |

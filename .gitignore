@@ -11,3 +11,6 @@ data/yolo_dataset/
 # 后端运行时数据（SQLite 数据库 + 上传图片，不入库）
 app/detection.db
 app/uploads/
+
+# Claude Code 本地配置（含机器特定 settings.local.json，不入库）
+.claude/
