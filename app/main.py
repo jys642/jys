@@ -28,6 +28,7 @@ from fastapi.staticfiles import StaticFiles
 
 from src.config import CLASS_CN, RF_MODEL, ROOT, YOLO_MODEL
 from src.pipeline import DetectionPipeline
+from src.visualization import draw_boxes
 from app import database as db
 from app.schemas import (DefectItem, DetectionResult, RecordDetail,
                          RecordSummary, Statistics)
@@ -57,19 +58,6 @@ pipeline = DetectionPipeline(YOLO_MODEL, RF_MODEL)
 @app.on_event("startup")
 def on_startup():
     db.init_db()
-
-
-def draw_boxes(img, defects):
-    """在图像上绘制缺陷框与中文类别标签，返回标注图。"""
-    annotated = img.copy()
-    for d in defects:
-        x1, y1, x2, y2 = (int(round(v)) for v in d["bbox"])
-        cv2.rectangle(annotated, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        cn = CLASS_CN.get(d["final_class"], d["final_class"])
-        label = f"{cn} {d['conf']:.2f}"
-        cv2.putText(annotated, label, (x1, max(14, y1 - 6)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-    return annotated
 
 
 @app.get("/", include_in_schema=False)

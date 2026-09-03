@@ -20,20 +20,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.config import CLASS_CN, INDEX_JSON, PROC_IMG, RF_MODEL, YOLO_MODEL
 from src.pipeline import DetectionPipeline
+from src.visualization import draw_boxes
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "runs", "demo")
-
-
-def draw_results(img, results):
-    """在图像上绘制检测框与类别标签。"""
-    for r in results:
-        x1, y1, x2, y2 = (int(v) for v in r["bbox"])
-        cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        cn = CLASS_CN.get(r["final_class"], r["final_class"])
-        label = f"{cn} {r['conf']:.2f}"
-        cv2.putText(img, label, (x1, max(10, y1 - 6)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-    return img
 
 
 def main():
@@ -63,7 +52,7 @@ def main():
 
     os.makedirs(OUT_DIR, exist_ok=True)
     out_path = os.path.join(OUT_DIR, name)
-    cv2.imwrite(out_path, draw_results(proc, results))
+    cv2.imwrite(out_path, draw_boxes(proc, results))
     print(f"可视化结果：{out_path}")
 
 
