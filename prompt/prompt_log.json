@@ -27,7 +27,7 @@
       "assistant_actions": [
         "读取方案设计.md / 选题说明.md / 学习笔记.md / 任务书 PDF，理解项目为药板药片缺陷检测系统",
         "调研公开数据集（Kaggle paracetamol-defect-dataset、pill-defect-dataset、PerceptiLabs/Pill-Defects）",
-        "建立规划文件 task_plan.md / findings.md / progress.md",
+        "建立项目规划与调研文档",
         "编写 data/generate_dataset.py，生成 120 张自建合成泡罩药板图像 + YOLO 标注（6 类缺陷）",
         "编写 data/preprocess.py，实现灰度化/高斯滤波/CLAHE/ROI/尺寸归一化 + 增广 + 划分，输出 480 张到 data/processed 及 index.json",
         "编写 data/README.md 说明数据来源与预处理"
@@ -127,7 +127,7 @@
         "运行集成测试，发现随机森林二次校验融合策略缺陷：原「RF≥0.5 就覆盖」过于激进，在 YOLO 高置信时被 RF 中等置信误判覆盖，F1 从 0.984 掉到 0.944",
         "诊断 RF 改对/改错置信度分布，引入 YOLO_CONF_GATE=0.5：改为「YOLO 自信优先、不确定才允许 RF 覆盖」，把 RF 定位为不确定时的安全网",
         "修复后重跑测试：test 集最终 Precision=0.969 / Recall=1.000 / F1=0.984，后端 5 接口 + 前端静态资源全流程通过",
-        "清理测试产物（app/detection.db、app/uploads/），更新 task_plan/progress/findings/README"
+        "清理测试产物（app/detection.db、app/uploads/），更新 README"
       ],
       "result": "系统集成测试完成：48 张测试样本端到端验证 + 后端接口全流程联调 + 前端静态资源校验全部通过；并发现修复了随机森林融合策略缺陷（YOLO_CONF_GATE 门限融合）"
     },
@@ -141,7 +141,7 @@
         "读取方案设计/学习笔记/选题说明与任务书 PDF，明确阶段六交付物为课程设计报告 + 答辩 PPT + 演示视频 + prompt 追溯",
         "撰写课程设计报告.md：背景与研究意义 / 方案设计 / 数据来源 / 系统实现（前端/后端/数据库/算法模块）/ 测试与集成 / AI 使用 / 过程总结 / 参考文献 / 附录，并附技术方向↔实际作用对照表",
         "整理答辩PPT大纲.md：15 页答辩汇报骨架",
-        "更新 task_plan / progress / prompt_log / README"
+        "更新 prompt 日志 / README"
       ],
       "result": "课程设计报告与答辩 PPT 大纲完成，六阶段全部交付；剩余人工完成演示视频录制与 PPT 成品化"
     }
